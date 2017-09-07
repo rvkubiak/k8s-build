@@ -1,0 +1,18 @@
+# To execute a build:
+#   gcloud container builds submit --config build_k8s.yaml --no-source
+
+secrets:
+- kmsKeyName: projects/istio-builder-prototype/locations/global/keyRings/Secrets/cryptoKeys/k8s-github
+  secretEnv:
+    GITHUB_TOKEN: CiQASO+NFFM36iyLd7M5rxeKW3TyQ3W8O2hWpvkg9CFXa9xc+mwSUQCkBp764TVcJgZLAVd6lwuaf7M26OE0k6DYMt3ilP33TI+vi7EXf7EKGnm99Ho+2M6TCluFFMh6j+CveKpKbrHyJXFu19q9f3gssevWC4CKTg==
+
+steps:
+- name: 'gcr.io/cloud-builders/git'
+  args: [ 'clone', 'https://github.com/kubernetes/release' ]
+
+- name: 'gcr.io/$PROJECT_ID/k8s-builder'
+  args: [ 'bash', 'find_green_build', 'release-1.7' ]
+  dir: 'release'
+  secretEnv: ['GITHUB_TOKEN']
+
+timeout: 1800s

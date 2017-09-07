@@ -1,0 +1,20 @@
+# To rebuild and publish this container run:
+#   gcloud container builds submit --config update_build_container.yaml .
+
+FROM ubuntu
+
+# Install packages
+RUN apt-get -q update && apt-get install -qqy apt-transport-https \
+    ca-certificates curl git gnupg2 lsb-release python \
+    software-properties-common wget jq python-setuptools python-dev \
+    build-essential
+
+# Install Pip packages
+RUN easy_install pip
+RUN pip install yq
+
+# Install gcloud
+RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -cs) main" > /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    apt-get -q update && \
+    apt-get install -qqy google-cloud-sdk
