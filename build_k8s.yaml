@@ -14,13 +14,8 @@ steps:
   args: [ 'clone', 'https://github.com/kubernetes/kubernetes' ]
 
 - name: 'gcr.io/$PROJECT_ID/k8s-builder'
-  args: [ 'bash', './find_green_build' ]
+  args: [ 'bash', './find_green_build', 'release-1.6' ]
   dir: 'release'
-  secretEnv: ['GITHUB_TOKEN']
-
-- name: 'gcr.io/$PROJECT_ID/k8s-builder'
-  args: [ 'bash', '../release/relnotes', '--branch=release-1.6' ]
-  dir: 'kubernetes'
   secretEnv: ['GITHUB_TOKEN']
 
 timeout: 1800s
