@@ -1,0 +1,19 @@
+steps:
+  - name: 'gcr.io/$PROJECT_ID/k8s-builder'
+    args: ['ls']
+
+  - name: 'gcr.io/$PROJECT_ID/k8s-builder'
+    args: ['docker', 'run', 'hello-world']  # test that we can use docker
+
+  - name: 'gcr.io/$PROJECT_ID/k8s-builder'
+    env:
+        - 'KUBE_DOCKER_REGISTRY=gcr.io/google_containers'
+        - 'KUBE_DOCKER_IMAGE_TAG=v1.7.6-beta.0-55-g1d025de9d7-test'
+        - 'KUBE_VERBOSE=6'
+    args: ['make', 'quick-release']
+
+  - name: 'gcr.io/$PROJECT_ID/k8s-builder'
+    args: ['git', 'clone', 'https://github.com/kubernetes/release.git']
+
+  - name: 'gcr.io/$PROJECT_ID/k8s-builder'
+    args: ['./release/push-build.sh --nomock --release-type=release --bucket=test-k8s-release --verbose']
