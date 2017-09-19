@@ -1,0 +1,24 @@
+# To build and upload a new version of the build container run:
+#   gcloud container builds submit --config cloudbuil.yaml .
+
+FROM gcr.io/cloud-builders/docker
+
+# Install packages
+RUN apt-get -q update && apt-get install -qqy apt-transport-https \
+    ca-certificates curl git gnupg2 lsb-release python \
+    software-properties-common wget python-setuptools python-dev \
+    build-essential jq pandoc
+
+# Install Pip packages
+RUN easy_install pip
+RUN pip install yq
+
+# Install jq 1.4.  Ubuntu repos have 1.5 which does not work with release scripts.
+RUN wget -O /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.4/jq-linux-x86_64 && \
+    chmod ug+x /usr/bin/jq
+
+# Install gcloud
+RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -cs) main" > /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    apt-get -q update && \
+    apt-get install -qqy google-cloud-sdk

@@ -6,12 +6,14 @@ the Dockerfile are updated.
 
 To update run:
 ```
-gcloud container builds submit --config update_build_container.yaml .
+gcloud container builds submit --config cloudbuild.yaml .
 ```
 
 ## Dependencies
 
 Packages installed on the build container are documented here.
+
+This image is extending the official Google Cloud Builder Docker image.
 
 - **curl** - Used for fetching build dependencies as part of the container
   build.
